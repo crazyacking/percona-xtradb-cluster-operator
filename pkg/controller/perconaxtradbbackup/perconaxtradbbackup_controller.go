@@ -139,6 +139,7 @@ func (r *ReconcilePerconaXtraDBBackup) Reconcile(request reconcile.Request) (rec
 	case api.BackupStorageFilesystem:
 		pvc := backup.NewPVC(instance)
 		pvc.Spec = *bcpStorage.Volume.PersistentVolumeClaim
+		pvc.ObjectMeta.Name = "cluster1-xb-cron-pvc"
 
 		destination = "pvc/" + pvc.Name
 
@@ -155,8 +156,6 @@ func (r *ReconcilePerconaXtraDBBackup) Reconcile(request reconcile.Request) (rec
 			if err != nil {
 				return reconcile.Result{}, fmt.Errorf("create backup pvc: %v", err)
 			}
-		} else if err != nil {
-			return reconcile.Result{}, fmt.Errorf("get backup pvc: %v", err)
 		}
 
 		// getting the volume status
